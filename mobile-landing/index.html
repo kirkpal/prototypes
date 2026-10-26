@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Placeholder Mobile Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single-screen app shell (header, scrolling view, bottom tab bar, slide-in menu). Desktop shows it inside a phone frame. */
+:root{
+  --bg:#f6f6f4; --surface:#ffffff; --fg:#121214; --muted:#6b6b72; --line:#dcdcd8;
+  --accent:#2d3cff; --accent-fg:#ffffff; --stage:#e6e6e2; --scrim:rgba(18,18,20,.4);
+  --display:"Instrument Serif",Georgia,serif;
+  --body:"Hanken Grotesk",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101012; --surface:#17171a; --fg:#f2f2ef; --muted:#9a9aa2; --line:#2a2a2f;
+  --accent:#7d88ff; --accent-fg:#101012; --stage:#0a0a0b; --scrim:rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101012; --surface:#17171a; --fg:#f2f2ef; --muted:#9a9aa2; --line:#2a2a2f;
+  --accent:#7d88ff; --accent-fg:#101012; --stage:#0a0a0b; --scrim:rgba(0,0,0,.6); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--stage);color:var(--fg);font:400 16px/1.5 var(--body);padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px));display:flex;align-items:center;justify-content:center}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.device{position:relative;width:100%;height:100%;background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+@media (min-width:600px){
+  .device{width:390px;height:min(844px,calc(100% - 32px));border-radius:44px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.35)}
+}
+
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line);flex:none;background:var(--bg)}
+.logo{font:400 26px/1 var(--display);letter-spacing:-.01em}
+.logo i{color:var(--accent)}
+.icon-btn{width:44px;height:44px;margin-right:-10px;display:grid;place-items:center}
+.burger{width:22px;height:10px;position:relative}
+.burger::before,.burger::after{content:"";position:absolute;left:0;right:0;height:1.5px;background:var(--fg)}
+.burger::before{top:0}.burger::after{bottom:0}
+
+main{flex:1;overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
+.view{display:none;padding:28px 20px 40px;animation:in .35s ease both}
+.view.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1{font-size:60px;line-height:.98;margin:18px 0 20px}
+h1 em,h2 em{color:var(--accent)}
+h2{font-size:38px;line-height:1.02;margin:14px 0 18px}
+h3{font-size:26px;line-height:1.1}
+p{margin:0 0 16px;color:var(--muted);max-width:34em}
+.lead{font-size:18px;color:var(--fg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 24px;border-radius:100px;font-weight:600;font-size:15px}
+.btn.primary{background:var(--accent);color:var(--accent-fg)}
+.btn.ghost{border:1px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+
+.mock{margin:32px 0;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:16px;display:grid;gap:12px}
+.mock .bar{display:flex;gap:6px}.mock .bar span{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.mock .tile{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:12px}
+.mock .tile b{font:400 34px/1 var(--display)}
+.mock .tile span{font:400 12px var(--mono);color:var(--muted)}
+.spark{width:100%;height:56px}
+
+.logos{display:flex;justify-content:space-between;gap:8px;padding:18px 0;border-block:1px solid var(--line);font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.list{border-top:1px solid var(--line);margin-top:24px}
+.item{border-bottom:1px solid var(--line)}
+.item>button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;text-align:left}
+.item .t{font:400 28px/1.1 var(--display);letter-spacing:-.01em}
+.item .n{font:400 12px var(--mono);color:var(--muted);display:block;margin-bottom:6px}
+.plus{width:20px;height:20px;position:relative;flex:none}
+.plus::before,.plus::after{content:"";position:absolute;background:var(--fg);left:50%;top:50%;transition:transform .25s}
+.plus::before{width:14px;height:1.5px;margin:-.75px 0 0 -7px}
+.plus::after{width:1.5px;height:14px;margin:-7px 0 0 -.75px}
+.item.open .plus::after{transform:scaleY(0)}
+.item .body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.item.open .body{grid-template-rows:1fr}
+.item .body>div{overflow:hidden}
+.item .body p{padding-bottom:20px}
+
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:100px;padding:4px;margin:20px 0 28px;background:var(--surface)}
+.seg button{height:40px;border-radius:100px;font-weight:500;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.plan{border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:14px;background:var(--surface)}
+.plan.hl{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.price{font:400 64px/1 var(--display);letter-spacing:-.03em;margin:14px 0 4px}
+.price small{font:400 13px var(--mono);color:var(--muted);letter-spacing:0}
+.plan ul{list-style:none;padding:0;margin:18px 0 22px;display:grid;gap:10px;font-size:15px}
+.plan li{display:flex;gap:10px}
+.plan li::before{content:"";width:12px;height:6px;border-left:1.5px solid var(--accent);border-bottom:1.5px solid var(--accent);transform:rotate(-45deg) translateY(5px);flex:none}
+.plan .btn{width:100%}
+
+.quote{font:italic 400 30px/1.15 var(--display);margin:36px 0 12px;text-wrap:balance}
+.field{display:grid;gap:6px;margin-bottom:16px}
+.field label{font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.field input,.field textarea,.field select{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;width:100%}
+.field textarea{min-height:110px;resize:vertical}
+.note{display:none;border:1px solid var(--accent);border-radius:12px;padding:14px;color:var(--fg);margin-top:16px}
+.note.on{display:block}
+
+footer.end{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);font:400 12px var(--mono);color:var(--muted);display:flex;justify-content:space-between}
+
+nav.tabs{flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--bg);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+nav.tabs button{display:grid;justify-items:center;gap:4px;padding:8px 0;font:500 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);position:relative}
+nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.5}
+nav.tabs button[aria-current="page"]{color:var(--fg)}
+nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7px;width:24px;height:2px;background:var(--accent)}
+
+.scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
+.drawer{position:absolute;top:0;bottom:0;right:0;width:84%;max-width:340px;background:var(--bg);border-left:1px solid var(--line);transform:translateX(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:30;display:flex;flex-direction:column;padding:14px 24px 28px;visibility:hidden}
+.menu-open .scrim{opacity:1;pointer-events:auto}
+.menu-open .drawer{transform:none;visibility:visible}
+.drawer .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.drawer .x{width:44px;height:44px;margin-right:-12px;position:relative}
+.drawer .x::before,.drawer .x::after{content:"";position:absolute;left:11px;top:21px;width:22px;height:1.5px;background:var(--fg);transform:rotate(45deg)}
+.drawer .x::after{transform:rotate(-45deg)}
+.drawer .links{display:grid}
+.drawer .links button{font:400 40px/1.15 var(--display);letter-spacing:-.02em;text-align:left;padding:8px 0;display:flex;justify-content:space-between;align-items:baseline}
+.drawer .links button small{font:400 11px var(--mono);color:var(--muted)}
+.drawer .links button[aria-current="page"]{color:var(--accent)}
+.drawer .foot{margin-top:auto;display:grid;gap:12px}
+.drawer .foot .btn{width:100%}
+.tg{display:flex;justify-content:space-between;align-items:center;font:400 12px var(--mono);color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="device" id="app">
+  <header>
+    <button class="logo" data-go="home" aria-label="Home">Placeholder<i>.</i></button>
+    <button class="icon-btn" id="open" aria-label="Open menu" aria-expanded="false"><span class="burger"></span></button>
+  </header>
+
+  <main id="main">
+    <!-- HOME -->
+    <section class="view on" id="home">
+      <div class="eyebrow">Version 2.0 · Now available</div>
+      <h1>The calm way to run your <em>work</em>.</h1>
+      <p class="lead">One quiet place for plans, tasks and decisions. Placeholder copy describes your product in two short sentences.</p>
+      <div class="row">
+        <button class="btn primary" data-go="pricing">Start free</button>
+        <button class="btn ghost" data-go="features">See features</button>
+      </div>
+
+      <div class="mock" aria-label="Product preview">
+        <div class="bar"><span></span><span></span><span></span></div>
+        <div class="tile"><b>86%</b><span>TASKS ON TRACK</span></div>
+        <svg class="spark" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 46 L40 40 L80 44 L120 28 L160 32 L200 18 L240 22 L300 6 L300 56 L0 56Z" fill="var(--accent)" opacity=".12"/>
+          <path d="M0 46 L40 40 L80 44 L120 28 L160 32 L200 18 L240 22 L300 6" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          <circle cx="299" cy="6" r="3" fill="var(--accent)"/>
+        </svg>
+        <div class="tile"><b>12</b><span>DECISIONS THIS WEEK</span></div>
+      </div>
+
+      <div class="logos"><span>Company</span><span>Studio</span><span>Group</span><span>Labs</span></div>
+
+      <div class="quote">“We replaced four tools with one and stopped losing context.”</div>
+      <p class="eyebrow" style="margin:0">Name Surname, Role at Company</p>
+
+      <footer class="end"><span>© 2026 Placeholder</span><span>Privacy · Terms</span></footer>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="view" id="features">
+      <div class="eyebrow">Features</div>
+      <h2>Fewer things, <em>done</em> properly.</h2>
+      <p class="lead">Tap a feature to read more.</p>
+      <div class="list" id="acc">
+        <div class="item open"><button aria-expanded="true"><span><span class="n">A</span><span class="t">Plans that update themselves</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Explain the benefit in plain words, in two or three short sentences.</p></div></div></div>
+        <div class="item"><button aria-expanded="false"><span><span class="n">B</span><span class="t">One inbox for decisions</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Explain the benefit in plain words, in two or three short sentences.</p></div></div></div>
+        <div class="item"><button aria-expanded="false"><span><span class="n">C</span><span class="t">Shared by default</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Explain the benefit in plain words, in two or three short sentences.</p></div></div></div>
+        <div class="item"><button aria-expanded="false"><span><span class="n">D</span><span class="t">Works offline</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Explain the benefit in plain words, in two or three short sentences.</p></div></div></div>
+      </div>
+      <div class="row" style="margin-top:32px"><button class="btn primary" data-go="pricing">View pricing</button></div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="view" id="pricing">
+      <div class="eyebrow">Pricing</div>
+      <h2>Simple, <em>honest</em> plans.</h2>
+      <div class="seg" role="group" aria-label="Billing period">
+        <button aria-pressed="true" data-bill="m">Monthly</button>
+        <button aria-pressed="false" data-bill="y">Yearly · save 20%</button>
+      </div>
+      <div class="plan">
+        <div class="eyebrow">Solo</div>
+        <div class="price"><span data-p="0">$0</span><small> / month</small></div>
+        <ul><li>Up to 3 projects</li><li>Basic search</li><li>Community support</li></ul>
+        <button class="btn ghost" data-go="contact">Get started</button>
+      </div>
+      <div class="plan hl">
+        <div class="eyebrow" style="color:var(--accent)">Team · Most chosen</div>
+        <div class="price"><span data-p="12">$12</span><small> / seat / month</small></div>
+        <ul><li>Unlimited projects</li><li>Decision inbox</li><li>Priority support</li></ul>
+        <button class="btn primary" data-go="contact">Start free trial</button>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="view" id="contact">
+      <div class="eyebrow">Get started</div>
+      <h2>Tell us where to <em>send</em> your invite.</h2>
+      <form id="form" novalidate>
+        <div class="field"><label for="n">Name</label><input id="n" autocomplete="name" placeholder="Name Surname"></div>
+        <div class="field"><label for="e">Work email</label><input id="e" type="email" autocomplete="email" placeholder="name@company.com"></div>
+        <div class="field"><label for="s">Team size</label><select id="s"><option>1–10</option><option>11–50</option><option>51–200</option><option>200+</option></select></div>
+        <button class="btn primary" style="width:100%" type="submit">Request invite</button>
+        <div class="note" id="note" role="status"></div>
+      </form>
+    </section>
+  </main>
+
+  <nav class="tabs" aria-label="Primary">
+    <button data-go="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+    <button data-go="features"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Features</button>
+    <button data-go="pricing"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2c-.6-.8-1.5-1.2-2.5-1.2-1.4 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1.100 2-2.500 2c-1 0-2-.4-2.600-1.200M12 6.500V8m0 8v1.500"/></svg>Pricing</button>
+    <button data-go="contact"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg>Contact</button>
+  </nav>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">
+    <div class="top"><span class="eyebrow">Menu</span><button class="x" id="close" aria-label="Close menu"></button></div>
+    <div class="links">
+      <button data-go="home" aria-current="page">Home <small>/</small></button>
+      <button data-go="features">Features <small>04</small></button>
+      <button data-go="pricing">Pricing <small>02</small></button>
+      <button data-go="contact">Contact <small>→</small></button>
+    </div>
+    <div class="foot">
+      <button class="btn primary" data-go="pricing">Start free</button>
+      <div class="tg"><span>Theme</span><button id="theme" style="text-decoration:underline">Toggle</button></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  var app=document.getElementById('app'),main=document.getElementById('main');
+  var views=['home','features','pricing','contact'];
+  function menu(on){
+    app.classList.toggle('menu-open',on);
+    document.getElementById('open').setAttribute('aria-expanded',on);
+    document.getElementById('drawer').setAttribute('aria-hidden',!on);
+    if(on)document.getElementById('close').focus();else document.getElementById('open').focus({preventScroll:true});
+  }
+  function go(id){
+    views.forEach(function(v){document.getElementById(v).classList.toggle('on',v===id)});
+    document.querySelectorAll('[data-go]').forEach(function(b){
+      if(b.closest('nav.tabs')||b.closest('.links')){
+        if(b.dataset.go===id)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+      }
+    });
+    main.scrollTo({top:0,behavior:'auto'});
+    if(app.classList.contains('menu-open')){app.classList.remove('menu-open');document.getElementById('open').setAttribute('aria-expanded',false);document.getElementById('drawer').setAttribute('aria-hidden',true)}
+  }
+  document.addEventListener('click',function(e){
+    var g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return}
+    var a=e.target.closest('.item>button');
+    if(a){var it=a.parentNode,o=!it.classList.contains('open');it.classList.toggle('open',o);a.setAttribute('aria-expanded',o)}
+    var b=e.target.closest('[data-bill]');
+    if(b){
+      document.querySelectorAll('[data-bill]').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+      var y=b.dataset.bill==='y';
+      document.querySelector('[data-p="12"]').textContent=y?'$10':'$12';
+    }
+  });
+  document.getElementById('open').onclick=function(){menu(true)};
+  document.getElementById('close').onclick=function(){menu(false)};
+  document.getElementById('scrim').onclick=function(){menu(false)};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')menu(false)});
+  document.getElementById('theme').onclick=function(){
+    var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    r.dataset.theme=dark?'light':'dark';
+  };
+  document.getElementById('form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var n=document.getElementById('n').value.trim(),m=document.getElementById('e').value.trim(),note=document.getElementById('note');
+    note.classList.add('on');
+    if(!m||m.indexOf('@')<1){note.textContent='Enter a valid work email so we know where to send the invite.';return}
+    note.textContent='Thanks'+(n?', '+n.split(' ')[0]:'')+'. Your invite is on its way to '+m+'.';
+  });
+})();
+</script>
+</body>
+</html>
