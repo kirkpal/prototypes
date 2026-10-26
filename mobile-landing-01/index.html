@@ -169,7 +169,7 @@ nav.tabs button[aria-current="page"] svg{color:var(--accent)}
 .drawer .links .sub button:last-child{color:var(--fg)}
 .drawer .links .group.open .sub{padding-bottom:10px}
 
-.mode{display:flex;align-items:center;gap:14px;margin-top:18px;padding:8px 0;align-self:flex-start}
+.mode{display:flex;align-items:center;gap:14px;margin:0 0 12px;padding:8px 0;align-self:flex-start}
 .mode svg{width:24px;height:24px;stroke:var(--fg);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .mode .moon{display:none}
 .mode[aria-checked="true"] .sun{display:none}
@@ -285,6 +285,11 @@ nav.tabs button[aria-current="page"] svg{color:var(--accent)}
   <div class="scrim" id="scrim"></div>
   <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">
     <div class="top"><span class="eyebrow">Menu</span><button class="x" id="close" aria-label="Close menu"></button></div>
+    <button class="mode" id="theme" role="switch" aria-checked="false" aria-label="Dark mode">
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.500V22M2 12h2.500M19.500 12H22M4.900 4.900l1.800 1.800M17.300 17.300l1.800 1.800M4.900 19.100l1.800-1.800M17.300 6.700l1.800-1.800"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.500A8.500 8.500 0 0 1 9.500 4 8.500 8.500 0 1 0 20 14.500z"/></svg>
+      <span class="track"><span class="knob"></span></span>
+    </button>
     <div class="links">
       <button data-go="home" aria-current="page">Home <small>/</small></button>
       <div class="group"><button class="gtoggle" data-parent="features" aria-expanded="false">Discover <span class="chev"></span></button><div class="sub"><div><button data-go="features" data-item="0">Watch parties</button><button data-go="features" data-item="1">Live events</button><button data-go="features" data-item="2">Shared playlists</button><button data-go="features" data-item="3">Download and go</button><button data-go="features">All of Discover</button></div></div></div>
@@ -297,11 +302,6 @@ nav.tabs button[aria-current="page"] svg{color:var(--accent)}
       <a href="https://maps.google.com/?q=Los+Angeles" target="_blank" rel="noopener">Our location</a>
       <a href="tel:+15555550100">Call</a>
     </div>
-    <button class="mode" id="theme" role="switch" aria-checked="false" aria-label="Dark mode">
-      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.500V22M2 12h2.500M19.500 12H22M4.900 4.900l1.800 1.800M17.300 17.300l1.800 1.800M4.900 19.100l1.800-1.800M17.300 6.700l1.800-1.800"/></svg>
-      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.500A8.500 8.500 0 0 1 9.500 4 8.500 8.500 0 1 0 20 14.500z"/></svg>
-      <span class="track"><span class="knob"></span></span>
-    </button>
     
     <div class="foot">
       <button class="btn primary" data-go="pricing">Start watching</button>
