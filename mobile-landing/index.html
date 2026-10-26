@@ -128,6 +128,19 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
 .drawer .foot .btn{width:100%}
 .tg{display:flex;justify-content:space-between;align-items:center;font:400 12px var(--mono);color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.drawer .links .group>button{width:100%}
+.drawer .links .chev{width:16px;height:16px;position:relative;flex:none;align-self:center}
+.drawer .links .chev::before,.drawer .links .chev::after{content:"";position:absolute;background:currentColor;left:50%;top:50%;transition:transform .25s}
+.drawer .links .chev::before{width:14px;height:1.5px;margin:-.75px 0 0 -7px}
+.drawer .links .chev::after{width:1.5px;height:14px;margin:-7px 0 0 -.75px}
+.drawer .links .group.open .chev::after{transform:scaleY(0)}
+.drawer .links .sub{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.drawer .links .group.open .sub{grid-template-rows:1fr}
+.drawer .links .sub>div{overflow:hidden;display:grid;padding-left:4px}
+.drawer .links .sub button{font:500 18px/1.3 var(--body);letter-spacing:0;padding:11px 0;color:var(--muted);border-left:1px solid var(--line);padding-left:16px;display:block}
+.drawer .links .sub button:last-child{color:var(--fg)}
+.drawer .links .group.open .sub{padding-bottom:10px}
 </style>
 
 </head>
@@ -230,7 +243,7 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
     <div class="top"><span class="eyebrow">Menu</span><button class="x" id="close" aria-label="Close menu"></button></div>
     <div class="links">
       <button data-go="home" aria-current="page">Home <small>/</small></button>
-      <button data-go="features">Features <small>04</small></button>
+      <div class="group" id="grp"><button id="grpbtn" data-parent="features" aria-expanded="false">Features <span class="chev"></span></button><div class="sub"><div><button data-go="features" data-item="0">Self-updating plans</button><button data-go="features" data-item="1">Decision inbox</button><button data-go="features" data-item="2">Shared by default</button><button data-go="features" data-item="3">Works offline</button><button data-go="features">All features</button></div></div></div>
       <button data-go="pricing">Pricing <small>02</small></button>
       <button data-go="contact">Contact <small>→</small></button>
     </div>
@@ -246,6 +259,7 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
   var app=document.getElementById('app'),main=document.getElementById('main');
   var views=['home','features','pricing','contact'];
   function menu(on){
+    if(!on){var g0=document.getElementById('grp');g0.classList.remove('open');document.getElementById('grpbtn').setAttribute('aria-expanded',false)}
     app.classList.toggle('menu-open',on);
     document.getElementById('open').setAttribute('aria-expanded',on);
     document.getElementById('drawer').setAttribute('aria-hidden',!on);
@@ -258,11 +272,17 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
         if(b.dataset.go===id)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
       }
     });
+    var gb=document.getElementById('grpbtn');if(id==='features')gb.setAttribute('aria-current','page');else gb.removeAttribute('aria-current');
     main.scrollTo({top:0,behavior:'auto'});
-    if(app.classList.contains('menu-open')){app.classList.remove('menu-open');document.getElementById('open').setAttribute('aria-expanded',false);document.getElementById('drawer').setAttribute('aria-hidden',true)}
+    if(app.classList.contains('menu-open')){app.classList.remove('menu-open');document.getElementById('grp').classList.remove('open');gb.setAttribute('aria-expanded',false);document.getElementById('open').setAttribute('aria-expanded',false);document.getElementById('drawer').setAttribute('aria-hidden',true)}
   }
   document.addEventListener('click',function(e){
-    var g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return}
+    var gt=e.target.closest('#grpbtn');
+    if(gt){var gr=document.getElementById('grp'),o2=!gr.classList.contains('open');gr.classList.toggle('open',o2);gt.setAttribute('aria-expanded',o2);return}
+    var g=e.target.closest('[data-go]');
+    if(g){go(g.dataset.go);
+      if(g.dataset.item!==undefined){var its=document.querySelectorAll('#acc .item');its.forEach(function(it,i){var o=i===+g.dataset.item;it.classList.toggle('open',o);it.firstElementChild.setAttribute('aria-expanded',o)});}
+      return}
     var a=e.target.closest('.item>button');
     if(a){var it=a.parentNode,o=!it.classList.contains('open');it.classList.toggle('open',o);a.setAttribute('aria-expanded',o)}
     var b=e.target.closest('[data-bill]');
