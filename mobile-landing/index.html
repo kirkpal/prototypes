@@ -203,13 +203,13 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
         <button aria-pressed="true" data-bill="m">Monthly</button>
         <button aria-pressed="false" data-bill="y">Yearly · save 20%</button>
       </div>
-      <div class="plan">
+      <div class="plan" id="plan0">
         <div class="eyebrow">Solo</div>
         <div class="price"><span data-p="0">$0</span><small> / month</small></div>
         <ul><li>Up to 3 projects</li><li>Basic search</li><li>Community support</li></ul>
         <button class="btn ghost" data-go="contact">Get started</button>
       </div>
-      <div class="plan hl">
+      <div class="plan hl" id="plan1">
         <div class="eyebrow" style="color:var(--accent)">Team · Most chosen</div>
         <div class="price"><span data-p="12">$12</span><small> / seat / month</small></div>
         <ul><li>Unlimited projects</li><li>Decision inbox</li><li>Priority support</li></ul>
@@ -243,9 +243,9 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
     <div class="top"><span class="eyebrow">Menu</span><button class="x" id="close" aria-label="Close menu"></button></div>
     <div class="links">
       <button data-go="home" aria-current="page">Home <small>/</small></button>
-      <div class="group" id="grp"><button id="grpbtn" data-parent="features" aria-expanded="false">Features <span class="chev"></span></button><div class="sub"><div><button data-go="features" data-item="0">Self-updating plans</button><button data-go="features" data-item="1">Decision inbox</button><button data-go="features" data-item="2">Shared by default</button><button data-go="features" data-item="3">Works offline</button><button data-go="features">All features</button></div></div></div>
-      <button data-go="pricing">Pricing <small>02</small></button>
-      <button data-go="contact">Contact <small>→</small></button>
+      <div class="group"><button class="gtoggle" data-parent="features" aria-expanded="false">Features <span class="chev"></span></button><div class="sub"><div><button data-go="features" data-item="0">Self-updating plans</button><button data-go="features" data-item="1">Decision inbox</button><button data-go="features" data-item="2">Shared by default</button><button data-go="features" data-item="3">Works offline</button><button data-go="features">All features</button></div></div></div>
+      <div class="group"><button class="gtoggle" data-parent="pricing">Pricing <span class="chev"></span></button><div class="sub"><div><button data-go="pricing" data-do="plan:0">Free plan</button><button data-go="pricing" data-do="plan:1">Plus plan</button><button data-go="pricing" data-do="bill:m">Monthly billing</button><button data-go="pricing" data-do="bill:y">Yearly billing</button><button data-go="pricing">All plans</button></div></div></div>
+      <div class="group"><button class="gtoggle" data-parent="contact">Contact <span class="chev"></span></button><div class="sub"><div><button data-go="contact" data-do="focus:n">Your name</button><button data-go="contact" data-do="focus:e">Your email</button><button data-go="contact" data-do="focus:s">Team size</button><button data-go="contact">Get started</button></div></div></div>
     </div>
     <div class="foot">
       <button class="btn primary" data-go="pricing">Start free</button>
@@ -258,8 +258,9 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
 (function(){
   var app=document.getElementById('app'),main=document.getElementById('main');
   var views=['home','features','pricing','contact'];
+  function closeGroups(){document.querySelectorAll('.group').forEach(function(g){g.classList.remove('open');g.firstElementChild.setAttribute('aria-expanded',false)})}
   function menu(on){
-    if(!on){var g0=document.getElementById('grp');g0.classList.remove('open');document.getElementById('grpbtn').setAttribute('aria-expanded',false)}
+    if(!on)closeGroups();
     app.classList.toggle('menu-open',on);
     document.getElementById('open').setAttribute('aria-expanded',on);
     document.getElementById('drawer').setAttribute('aria-hidden',!on);
@@ -272,16 +273,20 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
         if(b.dataset.go===id)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
       }
     });
-    var gb=document.getElementById('grpbtn');if(id==='features')gb.setAttribute('aria-current','page');else gb.removeAttribute('aria-current');
+    document.querySelectorAll('.gtoggle').forEach(function(t){if(t.dataset.parent===id)t.setAttribute('aria-current','page');else t.removeAttribute('aria-current')});
     main.scrollTo({top:0,behavior:'auto'});
-    if(app.classList.contains('menu-open')){app.classList.remove('menu-open');document.getElementById('grp').classList.remove('open');gb.setAttribute('aria-expanded',false);document.getElementById('open').setAttribute('aria-expanded',false);document.getElementById('drawer').setAttribute('aria-hidden',true)}
+    if(app.classList.contains('menu-open')){app.classList.remove('menu-open');closeGroups();document.getElementById('open').setAttribute('aria-expanded',false);document.getElementById('drawer').setAttribute('aria-hidden',true)}
   }
   document.addEventListener('click',function(e){
-    var gt=e.target.closest('#grpbtn');
-    if(gt){var gr=document.getElementById('grp'),o2=!gr.classList.contains('open');gr.classList.toggle('open',o2);gt.setAttribute('aria-expanded',o2);return}
+    var gt=e.target.closest('.gtoggle');
+    if(gt){var gr=gt.parentNode,o2=!gr.classList.contains('open');closeGroups();gr.classList.toggle('open',o2);gt.setAttribute('aria-expanded',o2);return}
     var g=e.target.closest('[data-go]');
     if(g){go(g.dataset.go);
-      if(g.dataset.item!==undefined){var its=document.querySelectorAll('#acc .item');its.forEach(function(it,i){var o=i===+g.dataset.item;it.classList.toggle('open',o);it.firstElementChild.setAttribute('aria-expanded',o)});}
+      if(g.dataset.item!==undefined){document.querySelectorAll('#acc .item').forEach(function(it,i){var o=i===+g.dataset.item;it.classList.toggle('open',o);it.firstElementChild.setAttribute('aria-expanded',o)})}
+      if(g.dataset.do){var k=g.dataset.do.split(':');
+        if(k[0]==='plan')document.getElementById('plan'+k[1]).scrollIntoView({behavior:'smooth',block:'start'});
+        if(k[0]==='bill')document.querySelector('[data-bill="'+k[1]+'"]').click();
+        if(k[0]==='focus')document.getElementById(k[1]).focus();}
       return}
     var a=e.target.closest('.item>button');
     if(a){var it=a.parentNode,o=!it.classList.contains('open');it.classList.toggle('open',o);a.setAttribute('aria-expanded',o)}
