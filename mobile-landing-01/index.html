@@ -116,7 +116,7 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
 .drawer{position:absolute;inset:0;overflow-y:auto;background:var(--bg);opacity:0;transition:opacity .3s ease,visibility 0s linear .3s;z-index:30;display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top,0px)) 24px calc(28px + env(safe-area-inset-bottom,0px));visibility:hidden}
 .menu-open .scrim{opacity:1;pointer-events:auto}
 .menu-open .drawer{opacity:1;visibility:visible;transition:opacity .3s ease}
-.drawer .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.drawer .top{position:sticky;top:0;z-index:1;background:var(--bg);display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
 .drawer .x{width:44px;height:44px;margin-right:-12px;position:relative}
 .drawer .x::before,.drawer .x::after{content:"";position:absolute;left:11px;top:21px;width:22px;height:1.5px;background:var(--fg);transform:rotate(45deg)}
 .drawer .x::after{transform:rotate(-45deg)}
@@ -179,6 +179,7 @@ nav.tabs button[aria-current="page"] svg{color:var(--accent)}
 .mode[aria-checked="true"] .track{background:var(--accent);border-color:var(--accent)}
 .mode[aria-checked="true"] .knob{transform:translateX(20px);background:var(--accent-fg)}
 
+.drawer>*{flex:none}
 .drawer .extra{height:1px;background:var(--fg);opacity:.22;margin:14px 0 8px}
 .contact-links{display:grid}
 .contact-links a{font:600 16px/1.4 var(--body);color:var(--fg);text-decoration:none;padding:10px 0}
