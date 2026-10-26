@@ -178,6 +178,11 @@ nav.tabs button[aria-current="page"] svg{color:var(--accent)}
 .mode .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--fg);transition:transform .25s}
 .mode[aria-checked="true"] .track{background:var(--accent);border-color:var(--accent)}
 .mode[aria-checked="true"] .knob{transform:translateX(20px);background:var(--accent-fg)}
+
+.drawer .extra{height:1px;background:var(--fg);opacity:.22;margin:14px 0 8px}
+.contact-links{display:grid}
+.contact-links a{font:600 16px/1.4 var(--body);color:var(--fg);text-decoration:none;padding:10px 0}
+.contact-links a:hover{color:var(--accent)}
 </style>
 
 </head>
@@ -282,6 +287,12 @@ nav.tabs button[aria-current="page"] svg{color:var(--accent)}
       <div class="group"><button class="gtoggle" data-parent="features" aria-expanded="false">Discover <span class="chev"></span></button><div class="sub"><div><button data-go="features" data-item="0">Watch parties</button><button data-go="features" data-item="1">Live events</button><button data-go="features" data-item="2">Shared playlists</button><button data-go="features" data-item="3">Download and go</button><button data-go="features">All of Discover</button></div></div></div>
       <div class="group"><button class="gtoggle" data-parent="pricing">Pricing <span class="chev"></span></button><div class="sub"><div><button data-go="pricing" data-do="plan:0">Free plan</button><button data-go="pricing" data-do="plan:1">Plus plan</button><button data-go="pricing" data-do="bill:m">Monthly billing</button><button data-go="pricing" data-do="bill:y">Yearly billing</button><button data-go="pricing">All plans</button></div></div></div>
       <div class="group"><button class="gtoggle" data-parent="contact">Join <span class="chev"></span></button><div class="sub"><div><button data-go="contact" data-do="focus:n">Your name</button><button data-go="contact" data-do="focus:e">Your email</button><button data-go="contact" data-do="focus:s">Favorite genre</button><button data-go="contact">Join page</button></div></div></div>
+    </div>
+    <div class="extra" role="separator" aria-hidden="true"></div>
+    <div class="contact-links">
+      <a href="mailto:hello@placeholder.example">Message us</a>
+      <a href="https://maps.google.com/?q=Los+Angeles" target="_blank" rel="noopener">Our location</a>
+      <a href="tel:+15555550100">Call</a>
     </div>
     <button class="mode" id="theme" role="switch" aria-checked="false" aria-label="Dark mode">
       <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.500V22M2 12h2.500M19.500 12H22M4.900 4.900l1.800 1.800M17.300 17.300l1.800 1.800M4.900 19.100l1.800-1.800M17.300 6.700l1.800-1.800"/></svg>
