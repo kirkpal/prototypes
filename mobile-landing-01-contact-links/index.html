@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mobile Prototype 01 (Contact Links)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* Layout: single-screen app shell (header, scrolling view, bottom tab bar, slide-in menu). Desktop shows it inside a phone frame. */
+:root{
+  --bg:#efe6d6; --surface:#f8f2e6; --fg:#1d1033; --muted:#5e5278; --line:#d8ccb6;
+  --accent:#4a1fb8; --accent-fg:#f8f2e6; --pop:#b7f236; --pop-fg:#1d1033; --stage:#d9cdb8; --scrim:rgba(29,16,51,.5);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"DM Sans",system-ui,sans-serif;
+  --mono:"Space Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1a0e36; --surface:#26154d; --fg:#f1e8d8; --muted:#b4a6d4; --line:#3a2766;
+  --accent:#b7f236; --accent-fg:#1d1033; --pop:#b7f236; --pop-fg:#1d1033; --stage:#0f0820; --scrim:rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1a0e36; --surface:#26154d; --fg:#f1e8d8; --muted:#b4a6d4; --line:#3a2766;
+  --accent:#b7f236; --accent-fg:#1d1033; --pop:#b7f236; --pop-fg:#1d1033; --stage:#0f0820; --scrim:rgba(0,0,0,.6); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--stage);color:var(--fg);font:400 16px/1.5 var(--body);padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px));display:flex;align-items:center;justify-content:center}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.device{position:relative;width:100%;height:100%;background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+@media (min-width:600px){
+  .device{width:390px;height:min(844px,calc(100% - 32px));border-radius:44px;border:1px solid var(--line);box-shadow:0 30px 80px -30px rgba(0,0,0,.35)}
+}
+
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line);flex:none;background:var(--bg)}
+.logo{font:400 26px/1 var(--display);letter-spacing:-.01em}
+.logo i{color:var(--accent)}
+.icon-btn{width:44px;height:44px;margin-right:-10px;display:grid;place-items:center}
+.burger{width:22px;height:10px;position:relative}
+.burger::before,.burger::after{content:"";position:absolute;left:0;right:0;height:1.5px;background:var(--fg)}
+.burger::before{top:0}.burger::after{bottom:0}
+
+main{flex:1;overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
+.view{display:none;padding:28px 20px 40px;animation:in .35s ease both}
+.view.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1{font-size:60px;line-height:.98;margin:18px 0 20px}
+h1 em,h2 em{color:var(--accent)}
+h2{font-size:38px;line-height:1.02;margin:14px 0 18px}
+h3{font-size:26px;line-height:1.1}
+p{margin:0 0 16px;color:var(--muted);max-width:34em}
+.lead{font-size:18px;color:var(--fg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 24px;border-radius:100px;font-weight:600;font-size:15px}
+.btn.primary{background:var(--accent);color:var(--accent-fg)}
+.btn.ghost{border:1px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+
+.mock{margin:32px 0;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:16px;display:grid;gap:12px}
+.mock .bar{display:flex;gap:6px}.mock .bar span{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.mock .tile{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:12px}
+.mock .tile b{font:400 34px/1 var(--display)}
+.mock .tile span{font:400 12px var(--mono);color:var(--muted)}
+.spark{width:100%;height:56px}
+
+.logos{display:flex;justify-content:space-between;gap:8px;padding:18px 0;border-block:1px solid var(--line);font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.list{border-top:1px solid var(--line);margin-top:24px}
+.item{border-bottom:1px solid var(--line)}
+.item>button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;text-align:left}
+.item .t{font:400 28px/1.1 var(--display);letter-spacing:-.01em}
+.item .n{font:400 12px var(--mono);color:var(--muted);display:block;margin-bottom:6px}
+.plus{width:20px;height:20px;position:relative;flex:none}
+.plus::before,.plus::after{content:"";position:absolute;background:var(--fg);left:50%;top:50%;transition:transform .25s}
+.plus::before{width:14px;height:1.5px;margin:-.75px 0 0 -7px}
+.plus::after{width:1.5px;height:14px;margin:-7px 0 0 -.75px}
+.item.open .plus::after{transform:scaleY(0)}
+.item .body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.item.open .body{grid-template-rows:1fr}
+.item .body>div{overflow:hidden}
+.item .body p{padding-bottom:20px}
+
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:100px;padding:4px;margin:20px 0 28px;background:var(--surface)}
+.seg button{height:40px;border-radius:100px;font-weight:500;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.plan{border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:14px;background:var(--surface)}
+.plan.hl{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.price{font:400 64px/1 var(--display);letter-spacing:-.03em;margin:14px 0 4px}
+.price small{font:400 13px var(--mono);color:var(--muted);letter-spacing:0}
+.plan ul{list-style:none;padding:0;margin:18px 0 22px;display:grid;gap:10px;font-size:15px}
+.plan li{display:flex;gap:10px}
+.plan li::before{content:"";width:12px;height:6px;border-left:1.5px solid var(--accent);border-bottom:1.5px solid var(--accent);transform:rotate(-45deg) translateY(5px);flex:none}
+.plan .btn{width:100%}
+
+.quote{font:italic 400 30px/1.15 var(--display);margin:36px 0 12px;text-wrap:balance}
+.field{display:grid;gap:6px;margin-bottom:16px}
+.field label{font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.field input,.field textarea,.field select{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;width:100%}
+.field textarea{min-height:110px;resize:vertical}
+.note{display:none;border:1px solid var(--accent);border-radius:12px;padding:14px;color:var(--fg);margin-top:16px}
+.note.on{display:block}
+
+footer.end{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);font:400 12px var(--mono);color:var(--muted);display:flex;justify-content:space-between}
+
+nav.tabs{flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--bg);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+nav.tabs button{display:grid;justify-items:center;gap:4px;padding:8px 0;font:500 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);position:relative}
+nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.5}
+nav.tabs button[aria-current="page"]{color:var(--fg)}
+nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7px;width:24px;height:2px;background:var(--accent)}
+
+.scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
+.drawer{position:absolute;inset:0;overflow-y:auto;background:var(--bg);opacity:0;transition:opacity .3s ease,visibility 0s linear .3s;z-index:30;display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top,0px)) 24px calc(28px + env(safe-area-inset-bottom,0px));visibility:hidden}
+.menu-open .scrim{opacity:1;pointer-events:auto}
+.menu-open .drawer{opacity:1;visibility:visible;transition:opacity .3s ease}
+.drawer .top{position:sticky;top:0;z-index:1;background:var(--bg);display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.drawer .x{width:44px;height:44px;margin-right:-12px;position:relative}
+.drawer .x::before,.drawer .x::after{content:"";position:absolute;left:11px;top:21px;width:22px;height:1.5px;background:var(--fg);transform:rotate(45deg)}
+.drawer .x::after{transform:rotate(-45deg)}
+.drawer .links{display:grid}
+.drawer .links button{font:400 40px/1.15 var(--display);letter-spacing:-.02em;text-align:left;padding:8px 0;display:flex;justify-content:space-between;align-items:baseline}
+.drawer .links button small{font:400 11px var(--mono);color:var(--muted)}
+.drawer .links button[aria-current="page"]{color:var(--accent)}
+.drawer .foot{margin-top:auto;padding-top:20px;display:grid;gap:12px}
+.drawer .foot .btn{width:100%}
+.tg{display:flex;justify-content:space-between;align-items:center;font:400 12px var(--mono);color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+h1,h2,h3,.logo,.price,.item .t,.drawer .links button,.quote,.mock .tile b{font-weight:800;letter-spacing:-.035em}
+h1{font-size:56px;line-height:.92}
+h1 em,h2 em{font-style:normal;background:var(--pop);color:var(--pop-fg);padding:0 .12em;border-radius:.18em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.logo i{font-style:normal;color:var(--pop);background:var(--accent);border-radius:50%;display:inline-block;width:.32em;height:.32em;margin-left:.06em}
+.quote{font-style:normal;font-weight:800;font-size:28px;line-height:1.1}
+.btn.primary{background:var(--pop);color:var(--pop-fg)}
+.btn{border-radius:14px}
+.seg,.seg button{border-radius:14px}
+.mock{background:var(--accent);color:var(--accent-fg);border:0;border-radius:24px}
+.mock .bar span{background:rgba(248,242,230,.3)}
+.mock .tile{border-color:rgba(248,242,230,.25)}
+.mock .tile span{color:rgba(248,242,230,.75)}
+.mock .tile b{color:var(--pop)}
+.now{display:grid;gap:10px}
+.now .card{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:12px;background:rgba(248,242,230,.1);border-radius:14px;padding:10px}
+.now .art{width:56px;height:56px;border-radius:10px;background:var(--pop)}
+.now .card:nth-child(2) .art{background:#f8f2e6}
+.now .card:nth-child(3) .art{background:#8e6bf0}
+.now b{font:700 15px var(--body);display:block;color:var(--accent-fg)}
+.now small{font:400 11px var(--mono);color:rgba(248,242,230,.7)}
+.now .live{font:700 10px var(--mono);letter-spacing:.08em;background:var(--pop);color:var(--pop-fg);padding:4px 8px;border-radius:100px}
+.plan{border-radius:24px}
+.plan.hl{background:var(--surface);box-shadow:0 0 0 2px var(--accent)}
+nav.tabs button[aria-current="page"]::before{background:var(--pop);height:3px;border-radius:3px}
+nav.tabs button[aria-current="page"] svg{color:var(--accent)}
+.item .t{font-size:24px}
+
+.drawer .links .group>button{width:100%}
+.drawer .links .chev{width:16px;height:16px;position:relative;flex:none;align-self:center}
+.drawer .links .chev::before,.drawer .links .chev::after{content:"";position:absolute;background:currentColor;left:50%;top:50%;transition:transform .25s}
+.drawer .links .chev::before{width:14px;height:1.5px;margin:-.75px 0 0 -7px}
+.drawer .links .chev::after{width:1.5px;height:14px;margin:-7px 0 0 -.75px}
+.drawer .links .group.open .chev::after{transform:scaleY(0)}
+.drawer .links .sub{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.drawer .links .group.open .sub{grid-template-rows:1fr}
+.drawer .links .sub>div{overflow:hidden;display:grid;padding-left:4px}
+.drawer .links .sub button{font:500 18px/1.3 var(--body);letter-spacing:0;padding:11px 0;color:var(--muted);border-left:1px solid var(--line);padding-left:16px;display:block}
+.drawer .links .sub button:last-child{color:var(--fg)}
+.drawer .links .group.open .sub{padding-bottom:10px}
+
+.mode{display:flex;align-items:center;gap:14px;margin:0 0 12px;padding:8px 0;align-self:flex-start}
+.mode svg{width:24px;height:24px;stroke:var(--fg);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.mode .moon{display:none}
+.mode[aria-checked="true"] .sun{display:none}
+.mode[aria-checked="true"] .moon{display:block}
+.mode .track{width:48px;height:28px;border-radius:100px;border:1px solid var(--line);background:var(--surface);position:relative;transition:background .25s,border-color .25s}
+.mode .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--fg);transition:transform .25s}
+.mode[aria-checked="true"] .track{background:var(--accent);border-color:var(--accent)}
+.mode[aria-checked="true"] .knob{transform:translateX(20px);background:var(--accent-fg)}
+
+.drawer>*{flex:none}
+.drawer .extra{height:1px;background:var(--fg);opacity:.22;margin:14px 0 8px}
+.contact-links{display:grid}
+.contact-links a{font:600 16px/1.4 var(--body);color:var(--fg);text-decoration:none;padding:10px 0}
+.contact-links a:hover{color:var(--accent)}
+.btn.outline{border:1.5px solid var(--fg);color:var(--fg);background:transparent}
+.btn.outline:hover{background:var(--fg);color:var(--bg)}
+</style>
+
+</head>
+<body>
+<div class="device" id="app">
+  <header>
+    <button class="logo" data-go="home" aria-label="Home">Placeholder<i>.</i></button>
+    <button class="icon-btn" id="open" aria-label="Open menu" aria-expanded="false"><span class="burger"></span></button>
+  </header>
+
+  <main id="main">
+    <!-- HOME -->
+    <section class="view on" id="home">
+      <div class="eyebrow">Tonight · 3 live now</div>
+      <h1>All your <em>shows</em>, one tap away.</h1>
+      <p class="lead">Stream series, join live events and queue music with friends. Placeholder copy for a two-sentence pitch.</p>
+      <div class="row">
+        <button class="btn primary" data-go="pricing">Start watching</button>
+        <button class="btn ghost" data-go="features">Explore</button>
+      </div>
+
+      <div class="mock" aria-label="Product preview">
+        <div class="bar"><span></span><span></span><span></span></div>
+        <div class="tile"><b>Live</b><span>HAPPENING NOW</span></div>
+        <div class="now">
+          <div class="card"><div class="art"></div><div><b>Neon Nights Live Set</b><small>MUSIC · 12.4K WATCHING</small></div><span class="live">LIVE</span></div>
+          <div class="card"><div class="art"></div><div><b>The Last Reel, S2E4</b><small>SERIES · 42 MIN</small></div><span class="live">NEW</span></div>
+          <div class="card"><div class="art"></div><div><b>Comedy Cellar Open Mic</b><small>COMEDY · 8.1K WATCHING</small></div><span class="live">LIVE</span></div>
+        </div>
+      </div>
+
+      <div class="logos"><span>Film</span><span>Music</span><span>Comedy</span><span>Games</span></div>
+
+      <div class="quote">“Friday movie night finally lives in one app.”</div>
+      <p class="eyebrow" style="margin:0">Name Surname, Member since 2025</p>
+
+      <footer class="end"><span>© 2026 Placeholder</span><span>Privacy · Terms</span></footer>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="view" id="features">
+      <div class="eyebrow">Discover</div>
+      <h2>Made for <em>friday</em> night.</h2>
+      <p class="lead">Tap a feature to see how it works.</p>
+      <div class="list" id="acc">
+        <div class="item open"><button aria-expanded="true"><span><span class="n">A</span><span class="t">Watch parties</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Say what it does for the viewer in two or three short sentences.</p></div></div></div>
+        <div class="item"><button aria-expanded="false"><span><span class="n">B</span><span class="t">Live events</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Say what it does for the viewer in two or three short sentences.</p></div></div></div>
+        <div class="item"><button aria-expanded="false"><span><span class="n">C</span><span class="t">Shared playlists</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Say what it does for the viewer in two or three short sentences.</p></div></div></div>
+        <div class="item"><button aria-expanded="false"><span><span class="n">D</span><span class="t">Download and go</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Say what it does for the viewer in two or three short sentences.</p></div></div></div>
+      </div>
+      <div class="row" style="margin-top:32px"><button class="btn primary" data-go="pricing">See plans</button></div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="view" id="pricing">
+      <div class="eyebrow">Pricing</div>
+      <h2>Pick your <em>plan</em>.</h2>
+      <div class="seg" role="group" aria-label="Billing period">
+        <button aria-pressed="true" data-bill="m">Monthly</button>
+        <button aria-pressed="false" data-bill="y">Yearly · save 25%</button>
+      </div>
+      <div class="plan" id="plan0">
+        <div class="eyebrow">Free</div>
+        <div class="price"><span data-p="0">$0</span><small> / month</small></div>
+        <ul><li>Ad-supported library</li><li>Weekly live events</li><li>1 screen</li></ul>
+        <button class="btn ghost" data-go="contact">Join free</button>
+      </div>
+      <div class="plan hl" id="plan1">
+        <div class="eyebrow" style="color:var(--accent)">Plus · Most chosen</div>
+        <div class="price"><span data-p="9">$9</span><small> / month</small></div>
+        <ul><li>No ads, ever</li><li>Downloads and watch parties</li><li>4 screens</li></ul>
+        <button class="btn primary" data-go="contact">Try 7 days free</button>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="view" id="contact">
+      <div class="eyebrow">Join</div>
+      <h2>Where should we <em>send</em> your pass?</h2>
+      <form id="form" novalidate>
+        <div class="field"><label for="n">Name</label><input id="n" autocomplete="name" placeholder="Name Surname"></div>
+        <div class="field"><label for="e">Email</label><input id="e" type="email" autocomplete="email" placeholder="name@email.com"></div>
+        <div class="field"><label for="s">Favorite genre</label><select id="s"><option>Series</option><option>Music</option><option>Comedy</option><option>Live events</option></select></div>
+        <button class="btn primary" style="width:100%" type="submit">Get my pass</button>
+        <div class="note" id="note" role="status"></div>
+      </form>
+    </section>
+  </main>
+
+  <nav class="tabs" aria-label="Primary">
+    <button data-go="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+    <button data-go="features"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Discover</button>
+    <button data-go="pricing"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2c-.6-.8-1.5-1.2-2.5-1.2-1.4 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1.100 2-2.500 2c-1 0-2-.4-2.600-1.200M12 6.500V8m0 8v1.500"/></svg>Pricing</button>
+    <button data-go="contact"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg>Join</button>
+  </nav>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">
+    <div class="top"><span class="eyebrow">Menu</span><button class="x" id="close" aria-label="Close menu"></button></div>
+    <button class="mode" id="theme" role="switch" aria-checked="false" aria-label="Dark mode">
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.500V22M2 12h2.500M19.500 12H22M4.900 4.900l1.800 1.800M17.300 17.300l1.800 1.800M4.900 19.100l1.800-1.800M17.300 6.700l1.800-1.800"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.500A8.500 8.500 0 0 1 9.500 4 8.500 8.500 0 1 0 20 14.500z"/></svg>
+      <span class="track"><span class="knob"></span></span>
+    </button>
+    <div class="links">
+      <button data-go="home" aria-current="page">Home <small>/</small></button>
+      <div class="group"><button class="gtoggle" data-parent="features" aria-expanded="false">Discover <span class="chev"></span></button><div class="sub"><div><button data-go="features" data-item="0">Watch parties</button><button data-go="features" data-item="1">Live events</button><button data-go="features" data-item="2">Shared playlists</button><button data-go="features" data-item="3">Download and go</button><button data-go="features">All of Discover</button></div></div></div>
+      <div class="group"><button class="gtoggle" data-parent="pricing">Pricing <span class="chev"></span></button><div class="sub"><div><button data-go="pricing" data-do="plan:0">Free plan</button><button data-go="pricing" data-do="plan:1">Plus plan</button><button data-go="pricing" data-do="bill:m">Monthly billing</button><button data-go="pricing" data-do="bill:y">Yearly billing</button><button data-go="pricing">All plans</button></div></div></div>
+      <div class="group"><button class="gtoggle" data-parent="contact">Join <span class="chev"></span></button><div class="sub"><div><button data-go="contact" data-do="focus:n">Your name</button><button data-go="contact" data-do="focus:e">Your email</button><button data-go="contact" data-do="focus:s">Favorite genre</button><button data-go="contact">Join page</button></div></div></div>
+    </div>
+    <div class="extra" role="separator" aria-hidden="true"></div>
+    <div class="contact-links">
+      <a href="mailto:hello@placeholder.example">Message us</a>
+      <a href="https://maps.google.com/?q=Los+Angeles" target="_blank" rel="noopener">Our location</a>
+      <a href="tel:+15555550100">Call</a>
+    </div>
+    
+    <div class="foot">
+      <button class="btn primary" data-go="pricing">Start watching</button>
+      <button class="btn outline" data-go="contact">Join now</button>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  var app=document.getElementById('app'),main=document.getElementById('main');
+  var views=['home','features','pricing','contact'];
+  function closeGroups(){document.querySelectorAll('.group').forEach(function(g){g.classList.remove('open');g.firstElementChild.setAttribute('aria-expanded',false)})}
+  function menu(on){
+    if(!on)closeGroups();
+    app.classList.toggle('menu-open',on);
+    document.getElementById('open').setAttribute('aria-expanded',on);
+    document.getElementById('drawer').setAttribute('aria-hidden',!on);
+    if(on)document.getElementById('close').focus();else document.getElementById('open').focus({preventScroll:true});
+  }
+  function go(id){
+    views.forEach(function(v){document.getElementById(v).classList.toggle('on',v===id)});
+    document.querySelectorAll('[data-go]').forEach(function(b){
+      if(b.closest('nav.tabs')||b.closest('.links')){
+        if(b.dataset.go===id)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+      }
+    });
+    document.querySelectorAll('.gtoggle').forEach(function(t){if(t.dataset.parent===id)t.setAttribute('aria-current','page');else t.removeAttribute('aria-current')});
+    main.scrollTo({top:0,behavior:'auto'});
+    if(app.classList.contains('menu-open')){app.classList.remove('menu-open');closeGroups();document.getElementById('open').setAttribute('aria-expanded',false);document.getElementById('drawer').setAttribute('aria-hidden',true)}
+  }
+  document.addEventListener('click',function(e){
+    var gt=e.target.closest('.gtoggle');
+    if(gt){var gr=gt.parentNode,o2=!gr.classList.contains('open');closeGroups();gr.classList.toggle('open',o2);gt.setAttribute('aria-expanded',o2);return}
+    var g=e.target.closest('[data-go]');
+    if(g){go(g.dataset.go);
+      if(g.dataset.item!==undefined){document.querySelectorAll('#acc .item').forEach(function(it,i){var o=i===+g.dataset.item;it.classList.toggle('open',o);it.firstElementChild.setAttribute('aria-expanded',o)})}
+      if(g.dataset.do){var k=g.dataset.do.split(':');
+        if(k[0]==='plan')document.getElementById('plan'+k[1]).scrollIntoView({behavior:'smooth',block:'start'});
+        if(k[0]==='bill')document.querySelector('[data-bill="'+k[1]+'"]').click();
+        if(k[0]==='focus')document.getElementById(k[1]).focus();}
+      return}
+    var a=e.target.closest('.item>button');
+    if(a){var it=a.parentNode,o=!it.classList.contains('open');it.classList.toggle('open',o);a.setAttribute('aria-expanded',o)}
+    var b=e.target.closest('[data-bill]');
+    if(b){
+      document.querySelectorAll('[data-bill]').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+      var y=b.dataset.bill==='y';
+      document.querySelector('[data-p="9"]').textContent=y?'$7':'$9';
+    }
+  });
+  document.getElementById('open').onclick=function(){menu(true)};
+  document.getElementById('close').onclick=function(){menu(false)};
+  document.getElementById('scrim').onclick=function(){menu(false)};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')menu(false)});
+  var tb=document.getElementById('theme');
+  function isDark(){var r=document.documentElement;return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+  function sync(){tb.setAttribute('aria-checked',isDark())}
+  tb.onclick=function(){document.documentElement.dataset.theme=isDark()?'light':'dark';sync()};
+  sync();
+  document.getElementById('form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var n=document.getElementById('n').value.trim(),m=document.getElementById('e').value.trim(),note=document.getElementById('note');
+    note.classList.add('on');
+    if(!m||m.indexOf('@')<1){note.textContent='Enter a valid email so we know where to send your pass.';return}
+    note.textContent='Thanks'+(n?', '+n.split(' ')[0]:'')+'. Your pass is on its way to '+m+'.';
+  });
+})();
+</script>
+</body>
+</html>
