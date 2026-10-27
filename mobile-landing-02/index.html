@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mobile Prototype 01 (Contact Links)</title>
+<title>Mobile Prototype 02</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap">
@@ -113,10 +113,10 @@ nav.tabs button[aria-current="page"]{color:var(--fg)}
 nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7px;width:24px;height:2px;background:var(--accent)}
 
 .scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
-.drawer{position:absolute;inset:0;overflow-y:auto;background:var(--bg);opacity:0;transition:opacity .3s ease,visibility 0s linear .3s;z-index:30;display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top,0px)) 24px calc(28px + env(safe-area-inset-bottom,0px));visibility:hidden}
+.drawer{position:absolute;inset:0;background:var(--bg);opacity:0;transition:opacity .3s ease,visibility 0s linear .3s;z-index:30;display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top,0px)) 24px calc(28px + env(safe-area-inset-bottom,0px));visibility:hidden}
 .menu-open .scrim{opacity:1;pointer-events:auto}
 .menu-open .drawer{opacity:1;visibility:visible;transition:opacity .3s ease}
-.drawer .top{position:sticky;top:0;z-index:1;background:var(--bg);display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.drawer .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
 .drawer .x{width:44px;height:44px;margin-right:-12px;position:relative}
 .drawer .x::before,.drawer .x::after{content:"";position:absolute;left:11px;top:21px;width:22px;height:1.5px;background:var(--fg);transform:rotate(45deg)}
 .drawer .x::after{transform:rotate(-45deg)}
@@ -124,7 +124,7 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
 .drawer .links button{font:400 40px/1.15 var(--display);letter-spacing:-.02em;text-align:left;padding:8px 0;display:flex;justify-content:space-between;align-items:baseline}
 .drawer .links button small{font:400 11px var(--mono);color:var(--muted)}
 .drawer .links button[aria-current="page"]{color:var(--accent)}
-.drawer .foot{margin-top:auto;padding-top:20px;display:grid;gap:12px}
+.drawer .foot{margin-top:auto;display:grid;gap:12px}
 .drawer .foot .btn{width:100%}
 .tg{display:flex;justify-content:space-between;align-items:center;font:400 12px var(--mono);color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -169,7 +169,7 @@ nav.tabs button[aria-current="page"] svg{color:var(--accent)}
 .drawer .links .sub button:last-child{color:var(--fg)}
 .drawer .links .group.open .sub{padding-bottom:10px}
 
-.mode{display:flex;align-items:center;gap:14px;margin:0 0 12px;padding:8px 0;align-self:flex-start}
+.mode{display:flex;align-items:center;gap:14px;margin-top:18px;padding:8px 0;align-self:flex-start}
 .mode svg{width:24px;height:24px;stroke:var(--fg);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .mode .moon{display:none}
 .mode[aria-checked="true"] .sun{display:none}
@@ -178,14 +178,6 @@ nav.tabs button[aria-current="page"] svg{color:var(--accent)}
 .mode .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--fg);transition:transform .25s}
 .mode[aria-checked="true"] .track{background:var(--accent);border-color:var(--accent)}
 .mode[aria-checked="true"] .knob{transform:translateX(20px);background:var(--accent-fg)}
-
-.drawer>*{flex:none}
-.drawer .extra{height:1px;background:var(--fg);opacity:.22;margin:14px 0 8px}
-.contact-links{display:grid}
-.contact-links a{font:600 16px/1.4 var(--body);color:var(--fg);text-decoration:none;padding:10px 0}
-.contact-links a:hover{color:var(--accent)}
-.btn.outline{border:1.5px solid var(--fg);color:var(--fg);background:transparent}
-.btn.outline:hover{background:var(--fg);color:var(--bg)}
 </style>
 
 </head>
@@ -285,27 +277,20 @@ nav.tabs button[aria-current="page"] svg{color:var(--accent)}
   <div class="scrim" id="scrim"></div>
   <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">
     <div class="top"><span class="eyebrow">Menu</span><button class="x" id="close" aria-label="Close menu"></button></div>
-    <button class="mode" id="theme" role="switch" aria-checked="false" aria-label="Dark mode">
-      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.500V22M2 12h2.500M19.500 12H22M4.900 4.900l1.800 1.800M17.300 17.300l1.800 1.800M4.900 19.100l1.800-1.800M17.300 6.700l1.800-1.800"/></svg>
-      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.500A8.500 8.500 0 0 1 9.500 4 8.500 8.500 0 1 0 20 14.500z"/></svg>
-      <span class="track"><span class="knob"></span></span>
-    </button>
     <div class="links">
       <button data-go="home" aria-current="page">Home <small>/</small></button>
       <div class="group"><button class="gtoggle" data-parent="features" aria-expanded="false">Discover <span class="chev"></span></button><div class="sub"><div><button data-go="features" data-item="0">Watch parties</button><button data-go="features" data-item="1">Live events</button><button data-go="features" data-item="2">Shared playlists</button><button data-go="features" data-item="3">Download and go</button><button data-go="features">All of Discover</button></div></div></div>
       <div class="group"><button class="gtoggle" data-parent="pricing">Pricing <span class="chev"></span></button><div class="sub"><div><button data-go="pricing" data-do="plan:0">Free plan</button><button data-go="pricing" data-do="plan:1">Plus plan</button><button data-go="pricing" data-do="bill:m">Monthly billing</button><button data-go="pricing" data-do="bill:y">Yearly billing</button><button data-go="pricing">All plans</button></div></div></div>
       <div class="group"><button class="gtoggle" data-parent="contact">Join <span class="chev"></span></button><div class="sub"><div><button data-go="contact" data-do="focus:n">Your name</button><button data-go="contact" data-do="focus:e">Your email</button><button data-go="contact" data-do="focus:s">Favorite genre</button><button data-go="contact">Join page</button></div></div></div>
     </div>
-    <div class="extra" role="separator" aria-hidden="true"></div>
-    <div class="contact-links">
-      <a href="mailto:hello@placeholder.example">Message us</a>
-      <a href="https://maps.google.com/?q=Los+Angeles" target="_blank" rel="noopener">Our location</a>
-      <a href="tel:+15555550100">Call</a>
-    </div>
+    <button class="mode" id="theme" role="switch" aria-checked="false" aria-label="Dark mode">
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.500V22M2 12h2.500M19.500 12H22M4.900 4.900l1.800 1.800M17.300 17.300l1.800 1.800M4.900 19.100l1.800-1.800M17.300 6.700l1.800-1.800"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.500A8.500 8.500 0 0 1 9.500 4 8.500 8.500 0 1 0 20 14.500z"/></svg>
+      <span class="track"><span class="knob"></span></span>
+    </button>
     
     <div class="foot">
       <button class="btn primary" data-go="pricing">Start watching</button>
-      <button class="btn outline" data-go="contact">Join now</button>
     </div>
   </aside>
 </div>

@@ -3,25 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mobile Prototype</title>
+<title>Mobile Prototype 02 (Contact Links)</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap">
 <style>
 /* Layout: single-screen app shell (header, scrolling view, bottom tab bar, slide-in menu). Desktop shows it inside a phone frame. */
 :root{
-  --bg:#f6f6f4; --surface:#ffffff; --fg:#121214; --muted:#6b6b72; --line:#dcdcd8;
-  --accent:#2d3cff; --accent-fg:#ffffff; --stage:#e6e6e2; --scrim:rgba(18,18,20,.4);
-  --display:"Instrument Serif",Georgia,serif;
-  --body:"Hanken Grotesk",system-ui,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --bg:#efe6d6; --surface:#f8f2e6; --fg:#1d1033; --muted:#5e5278; --line:#d8ccb6;
+  --accent:#4a1fb8; --accent-fg:#f8f2e6; --pop:#b7f236; --pop-fg:#1d1033; --stage:#d9cdb8; --scrim:rgba(29,16,51,.5);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"DM Sans",system-ui,sans-serif;
+  --mono:"Space Mono",ui-monospace,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#101012; --surface:#17171a; --fg:#f2f2ef; --muted:#9a9aa2; --line:#2a2a2f;
-  --accent:#7d88ff; --accent-fg:#101012; --stage:#0a0a0b; --scrim:rgba(0,0,0,.6); color-scheme:dark}}
+  --bg:#1a0e36; --surface:#26154d; --fg:#f1e8d8; --muted:#b4a6d4; --line:#3a2766;
+  --accent:#b7f236; --accent-fg:#1d1033; --pop:#b7f236; --pop-fg:#1d1033; --stage:#0f0820; --scrim:rgba(0,0,0,.6); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#101012; --surface:#17171a; --fg:#f2f2ef; --muted:#9a9aa2; --line:#2a2a2f;
-  --accent:#7d88ff; --accent-fg:#101012; --stage:#0a0a0b; --scrim:rgba(0,0,0,.6); color-scheme:dark}
+  --bg:#1a0e36; --surface:#26154d; --fg:#f1e8d8; --muted:#b4a6d4; --line:#3a2766;
+  --accent:#b7f236; --accent-fg:#1d1033; --pop:#b7f236; --pop-fg:#1d1033; --stage:#0f0820; --scrim:rgba(0,0,0,.6); color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{background:var(--stage);color:var(--fg);font:400 16px/1.5 var(--body);padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px));display:flex;align-items:center;justify-content:center}
@@ -113,10 +113,10 @@ nav.tabs button[aria-current="page"]{color:var(--fg)}
 nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7px;width:24px;height:2px;background:var(--accent)}
 
 .scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
-.drawer{position:absolute;inset:0;background:var(--bg);opacity:0;transition:opacity .3s ease,visibility 0s linear .3s;z-index:30;display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top,0px)) 24px calc(28px + env(safe-area-inset-bottom,0px));visibility:hidden}
+.drawer{position:absolute;inset:0;overflow-y:auto;background:var(--bg);opacity:0;transition:opacity .3s ease,visibility 0s linear .3s;z-index:30;display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top,0px)) 24px calc(28px + env(safe-area-inset-bottom,0px));visibility:hidden}
 .menu-open .scrim{opacity:1;pointer-events:auto}
 .menu-open .drawer{opacity:1;visibility:visible;transition:opacity .3s ease}
-.drawer .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.drawer .top{position:sticky;top:0;z-index:1;background:var(--bg);display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
 .drawer .x{width:44px;height:44px;margin-right:-12px;position:relative}
 .drawer .x::before,.drawer .x::after{content:"";position:absolute;left:11px;top:21px;width:22px;height:1.5px;background:var(--fg);transform:rotate(45deg)}
 .drawer .x::after{transform:rotate(-45deg)}
@@ -124,10 +124,37 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
 .drawer .links button{font:400 40px/1.15 var(--display);letter-spacing:-.02em;text-align:left;padding:8px 0;display:flex;justify-content:space-between;align-items:baseline}
 .drawer .links button small{font:400 11px var(--mono);color:var(--muted)}
 .drawer .links button[aria-current="page"]{color:var(--accent)}
-.drawer .foot{margin-top:auto;display:grid;gap:12px}
+.drawer .foot{margin-top:auto;padding-top:20px;display:grid;gap:12px}
 .drawer .foot .btn{width:100%}
 .tg{display:flex;justify-content:space-between;align-items:center;font:400 12px var(--mono);color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+h1,h2,h3,.logo,.price,.item .t,.drawer .links button,.quote,.mock .tile b{font-weight:800;letter-spacing:-.035em}
+h1{font-size:56px;line-height:.92}
+h1 em,h2 em{font-style:normal;background:var(--pop);color:var(--pop-fg);padding:0 .12em;border-radius:.18em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.logo i{font-style:normal;color:var(--pop);background:var(--accent);border-radius:50%;display:inline-block;width:.32em;height:.32em;margin-left:.06em}
+.quote{font-style:normal;font-weight:800;font-size:28px;line-height:1.1}
+.btn.primary{background:var(--pop);color:var(--pop-fg)}
+.btn{border-radius:14px}
+.seg,.seg button{border-radius:14px}
+.mock{background:var(--accent);color:var(--accent-fg);border:0;border-radius:24px}
+.mock .bar span{background:rgba(248,242,230,.3)}
+.mock .tile{border-color:rgba(248,242,230,.25)}
+.mock .tile span{color:rgba(248,242,230,.75)}
+.mock .tile b{color:var(--pop)}
+.now{display:grid;gap:10px}
+.now .card{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:12px;background:rgba(248,242,230,.1);border-radius:14px;padding:10px}
+.now .art{width:56px;height:56px;border-radius:10px;background:var(--pop)}
+.now .card:nth-child(2) .art{background:#f8f2e6}
+.now .card:nth-child(3) .art{background:#8e6bf0}
+.now b{font:700 15px var(--body);display:block;color:var(--accent-fg)}
+.now small{font:400 11px var(--mono);color:rgba(248,242,230,.7)}
+.now .live{font:700 10px var(--mono);letter-spacing:.08em;background:var(--pop);color:var(--pop-fg);padding:4px 8px;border-radius:100px}
+.plan{border-radius:24px}
+.plan.hl{background:var(--surface);box-shadow:0 0 0 2px var(--accent)}
+nav.tabs button[aria-current="page"]::before{background:var(--pop);height:3px;border-radius:3px}
+nav.tabs button[aria-current="page"] svg{color:var(--accent)}
+.item .t{font-size:24px}
 
 .drawer .links .group>button{width:100%}
 .drawer .links .chev{width:16px;height:16px;position:relative;flex:none;align-self:center}
@@ -142,7 +169,7 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
 .drawer .links .sub button:last-child{color:var(--fg)}
 .drawer .links .group.open .sub{padding-bottom:10px}
 
-.mode{display:flex;align-items:center;gap:14px;margin-top:18px;padding:8px 0;align-self:flex-start}
+.mode{display:flex;align-items:center;gap:14px;margin:0 0 12px;padding:8px 0;align-self:flex-start}
 .mode svg{width:24px;height:24px;stroke:var(--fg);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .mode .moon{display:none}
 .mode[aria-checked="true"] .sun{display:none}
@@ -151,6 +178,14 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
 .mode .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--fg);transition:transform .25s}
 .mode[aria-checked="true"] .track{background:var(--accent);border-color:var(--accent)}
 .mode[aria-checked="true"] .knob{transform:translateX(20px);background:var(--accent-fg)}
+
+.drawer>*{flex:none}
+.drawer .extra{height:1px;background:var(--fg);opacity:.22;margin:14px 0 8px}
+.contact-links{display:grid}
+.contact-links a{font:600 16px/1.4 var(--body);color:var(--fg);text-decoration:none;padding:10px 0}
+.contact-links a:hover{color:var(--accent)}
+.btn.outline{border:1.5px solid var(--fg);color:var(--fg);background:transparent}
+.btn.outline:hover{background:var(--fg);color:var(--bg)}
 </style>
 
 </head>
@@ -164,78 +199,77 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
   <main id="main">
     <!-- HOME -->
     <section class="view on" id="home">
-      <div class="eyebrow">Version 2.0 · Now available</div>
-      <h1>The calm way to run your <em>work</em>.</h1>
-      <p class="lead">One quiet place for plans, tasks and decisions. Placeholder copy describes your product in two short sentences.</p>
+      <div class="eyebrow">Tonight · 3 live now</div>
+      <h1>All your <em>shows</em>, one tap away.</h1>
+      <p class="lead">Stream series, join live events and queue music with friends. Placeholder copy for a two-sentence pitch.</p>
       <div class="row">
-        <button class="btn primary" data-go="pricing">Start free</button>
-        <button class="btn ghost" data-go="features">See features</button>
+        <button class="btn primary" data-go="pricing">Start watching</button>
+        <button class="btn ghost" data-go="features">Explore</button>
       </div>
 
       <div class="mock" aria-label="Product preview">
         <div class="bar"><span></span><span></span><span></span></div>
-        <div class="tile"><b>86%</b><span>TASKS ON TRACK</span></div>
-        <svg class="spark" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 46 L40 40 L80 44 L120 28 L160 32 L200 18 L240 22 L300 6 L300 56 L0 56Z" fill="var(--accent)" opacity=".12"/>
-          <path d="M0 46 L40 40 L80 44 L120 28 L160 32 L200 18 L240 22 L300 6" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/>
-          <circle cx="299" cy="6" r="3" fill="var(--accent)"/>
-        </svg>
-        <div class="tile"><b>12</b><span>DECISIONS THIS WEEK</span></div>
+        <div class="tile"><b>Live</b><span>HAPPENING NOW</span></div>
+        <div class="now">
+          <div class="card"><div class="art"></div><div><b>Neon Nights Live Set</b><small>MUSIC · 12.4K WATCHING</small></div><span class="live">LIVE</span></div>
+          <div class="card"><div class="art"></div><div><b>The Last Reel, S2E4</b><small>SERIES · 42 MIN</small></div><span class="live">NEW</span></div>
+          <div class="card"><div class="art"></div><div><b>Comedy Cellar Open Mic</b><small>COMEDY · 8.1K WATCHING</small></div><span class="live">LIVE</span></div>
+        </div>
       </div>
 
-      <div class="logos"><span>Company</span><span>Studio</span><span>Group</span><span>Labs</span></div>
+      <div class="logos"><span>Film</span><span>Music</span><span>Comedy</span><span>Games</span></div>
 
-      <div class="quote">“We replaced four tools with one and stopped losing context.”</div>
-      <p class="eyebrow" style="margin:0">Name Surname, Role at Company</p>
+      <div class="quote">“Friday movie night finally lives in one app.”</div>
+      <p class="eyebrow" style="margin:0">Name Surname, Member since 2025</p>
 
       <footer class="end"><span>© 2026 Placeholder</span><span>Privacy · Terms</span></footer>
     </section>
 
     <!-- FEATURES -->
     <section class="view" id="features">
-      <div class="eyebrow">Features</div>
-      <h2>Fewer things, <em>done</em> properly.</h2>
-      <p class="lead">Tap a feature to read more.</p>
+      <div class="eyebrow">Discover</div>
+      <h2>Made for <em>friday</em> night.</h2>
+      <p class="lead">Tap a feature to see how it works.</p>
       <div class="list" id="acc">
-        <div class="item open"><button aria-expanded="true"><span><span class="n">A</span><span class="t">Plans that update themselves</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Explain the benefit in plain words, in two or three short sentences.</p></div></div></div>
-        <div class="item"><button aria-expanded="false"><span><span class="n">B</span><span class="t">One inbox for decisions</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Explain the benefit in plain words, in two or three short sentences.</p></div></div></div>
-        <div class="item"><button aria-expanded="false"><span><span class="n">C</span><span class="t">Shared by default</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Explain the benefit in plain words, in two or three short sentences.</p></div></div></div>
-        <div class="item"><button aria-expanded="false"><span><span class="n">D</span><span class="t">Works offline</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Explain the benefit in plain words, in two or three short sentences.</p></div></div></div>
+        <div class="item open"><button aria-expanded="true"><span><span class="n">A</span><span class="t">Watch parties</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Say what it does for the viewer in two or three short sentences.</p></div></div></div>
+        <div class="item"><button aria-expanded="false"><span><span class="n">B</span><span class="t">Live events</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Say what it does for the viewer in two or three short sentences.</p></div></div></div>
+        <div class="item"><button aria-expanded="false"><span><span class="n">C</span><span class="t">Shared playlists</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Say what it does for the viewer in two or three short sentences.</p></div></div></div>
+        <div class="item"><button aria-expanded="false"><span><span class="n">D</span><span class="t">Download and go</span></span><span class="plus"></span></button><div class="body"><div><p>Placeholder description. Say what it does for the viewer in two or three short sentences.</p></div></div></div>
       </div>
-      <div class="row" style="margin-top:32px"><button class="btn primary" data-go="pricing">View pricing</button></div>
+      <div class="row" style="margin-top:32px"><button class="btn primary" data-go="pricing">See plans</button></div>
     </section>
 
     <!-- PRICING -->
     <section class="view" id="pricing">
       <div class="eyebrow">Pricing</div>
-      <h2>Simple, <em>honest</em> plans.</h2>
+      <h2>Pick your <em>plan</em>.</h2>
       <div class="seg" role="group" aria-label="Billing period">
         <button aria-pressed="true" data-bill="m">Monthly</button>
-        <button aria-pressed="false" data-bill="y">Yearly · save 20%</button>
+        <button aria-pressed="false" data-bill="y">Yearly · save 25%</button>
       </div>
       <div class="plan" id="plan0">
-        <div class="eyebrow">Solo</div>
+        <div class="eyebrow">Free</div>
         <div class="price"><span data-p="0">$0</span><small> / month</small></div>
-        <ul><li>Up to 3 projects</li><li>Basic search</li><li>Community support</li></ul>
-        <button class="btn ghost" data-go="contact">Get started</button>
+        <ul><li>Ad-supported library</li><li>Weekly live events</li><li>1 screen</li></ul>
+        <button class="btn ghost" data-go="contact">Join free</button>
       </div>
       <div class="plan hl" id="plan1">
-        <div class="eyebrow" style="color:var(--accent)">Team · Most chosen</div>
-        <div class="price"><span data-p="12">$12</span><small> / seat / month</small></div>
-        <ul><li>Unlimited projects</li><li>Decision inbox</li><li>Priority support</li></ul>
-        <button class="btn primary" data-go="contact">Start free trial</button>
+        <div class="eyebrow" style="color:var(--accent)">Plus · Most chosen</div>
+        <div class="price"><span data-p="9">$9</span><small> / month</small></div>
+        <ul><li>No ads, ever</li><li>Downloads and watch parties</li><li>4 screens</li></ul>
+        <button class="btn primary" data-go="contact">Try 7 days free</button>
       </div>
     </section>
 
     <!-- CONTACT -->
     <section class="view" id="contact">
-      <div class="eyebrow">Get started</div>
-      <h2>Tell us where to <em>send</em> your invite.</h2>
+      <div class="eyebrow">Join</div>
+      <h2>Where should we <em>send</em> your pass?</h2>
       <form id="form" novalidate>
         <div class="field"><label for="n">Name</label><input id="n" autocomplete="name" placeholder="Name Surname"></div>
-        <div class="field"><label for="e">Work email</label><input id="e" type="email" autocomplete="email" placeholder="name@company.com"></div>
-        <div class="field"><label for="s">Team size</label><select id="s"><option>1–10</option><option>11–50</option><option>51–200</option><option>200+</option></select></div>
-        <button class="btn primary" style="width:100%" type="submit">Request invite</button>
+        <div class="field"><label for="e">Email</label><input id="e" type="email" autocomplete="email" placeholder="name@email.com"></div>
+        <div class="field"><label for="s">Favorite genre</label><select id="s"><option>Series</option><option>Music</option><option>Comedy</option><option>Live events</option></select></div>
+        <button class="btn primary" style="width:100%" type="submit">Get my pass</button>
         <div class="note" id="note" role="status"></div>
       </form>
     </section>
@@ -243,28 +277,35 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
 
   <nav class="tabs" aria-label="Primary">
     <button data-go="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
-    <button data-go="features"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Features</button>
+    <button data-go="features"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Discover</button>
     <button data-go="pricing"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2c-.6-.8-1.5-1.2-2.5-1.2-1.4 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1.100 2-2.500 2c-1 0-2-.4-2.600-1.200M12 6.500V8m0 8v1.500"/></svg>Pricing</button>
-    <button data-go="contact"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg>Contact</button>
+    <button data-go="contact"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg>Join</button>
   </nav>
 
   <div class="scrim" id="scrim"></div>
   <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">
     <div class="top"><span class="eyebrow">Menu</span><button class="x" id="close" aria-label="Close menu"></button></div>
-    <div class="links">
-      <button data-go="home" aria-current="page">Home <small>/</small></button>
-      <div class="group"><button class="gtoggle" data-parent="features" aria-expanded="false">Features <span class="chev"></span></button><div class="sub"><div><button data-go="features" data-item="0">Self-updating plans</button><button data-go="features" data-item="1">Decision inbox</button><button data-go="features" data-item="2">Shared by default</button><button data-go="features" data-item="3">Works offline</button><button data-go="features">All features</button></div></div></div>
-      <div class="group"><button class="gtoggle" data-parent="pricing">Pricing <span class="chev"></span></button><div class="sub"><div><button data-go="pricing" data-do="plan:0">Free plan</button><button data-go="pricing" data-do="plan:1">Plus plan</button><button data-go="pricing" data-do="bill:m">Monthly billing</button><button data-go="pricing" data-do="bill:y">Yearly billing</button><button data-go="pricing">All plans</button></div></div></div>
-      <div class="group"><button class="gtoggle" data-parent="contact">Contact <span class="chev"></span></button><div class="sub"><div><button data-go="contact" data-do="focus:n">Your name</button><button data-go="contact" data-do="focus:e">Your email</button><button data-go="contact" data-do="focus:s">Team size</button><button data-go="contact">Get started</button></div></div></div>
-    </div>
     <button class="mode" id="theme" role="switch" aria-checked="false" aria-label="Dark mode">
       <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.500V22M2 12h2.500M19.500 12H22M4.900 4.900l1.800 1.800M17.300 17.300l1.800 1.800M4.900 19.100l1.800-1.800M17.300 6.700l1.800-1.800"/></svg>
       <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.500A8.500 8.500 0 0 1 9.500 4 8.500 8.500 0 1 0 20 14.500z"/></svg>
       <span class="track"><span class="knob"></span></span>
     </button>
+    <div class="links">
+      <button data-go="home" aria-current="page">Home <small>/</small></button>
+      <div class="group"><button class="gtoggle" data-parent="features" aria-expanded="false">Discover <span class="chev"></span></button><div class="sub"><div><button data-go="features" data-item="0">Watch parties</button><button data-go="features" data-item="1">Live events</button><button data-go="features" data-item="2">Shared playlists</button><button data-go="features" data-item="3">Download and go</button><button data-go="features">All of Discover</button></div></div></div>
+      <div class="group"><button class="gtoggle" data-parent="pricing">Pricing <span class="chev"></span></button><div class="sub"><div><button data-go="pricing" data-do="plan:0">Free plan</button><button data-go="pricing" data-do="plan:1">Plus plan</button><button data-go="pricing" data-do="bill:m">Monthly billing</button><button data-go="pricing" data-do="bill:y">Yearly billing</button><button data-go="pricing">All plans</button></div></div></div>
+      <div class="group"><button class="gtoggle" data-parent="contact">Join <span class="chev"></span></button><div class="sub"><div><button data-go="contact" data-do="focus:n">Your name</button><button data-go="contact" data-do="focus:e">Your email</button><button data-go="contact" data-do="focus:s">Favorite genre</button><button data-go="contact">Join page</button></div></div></div>
+    </div>
+    <div class="extra" role="separator" aria-hidden="true"></div>
+    <div class="contact-links">
+      <a href="mailto:hello@placeholder.example">Message us</a>
+      <a href="https://maps.google.com/?q=Los+Angeles" target="_blank" rel="noopener">Our location</a>
+      <a href="tel:+15555550100">Call</a>
+    </div>
     
     <div class="foot">
-      <button class="btn primary" data-go="pricing">Start free</button>
+      <button class="btn primary" data-go="pricing">Start watching</button>
+      <button class="btn outline" data-go="contact">Join now</button>
     </div>
   </aside>
 </div>
@@ -309,7 +350,7 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
     if(b){
       document.querySelectorAll('[data-bill]').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
       var y=b.dataset.bill==='y';
-      document.querySelector('[data-p="12"]').textContent=y?'$10':'$12';
+      document.querySelector('[data-p="9"]').textContent=y?'$7':'$9';
     }
   });
   document.getElementById('open').onclick=function(){menu(true)};
@@ -325,8 +366,8 @@ nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7
     e.preventDefault();
     var n=document.getElementById('n').value.trim(),m=document.getElementById('e').value.trim(),note=document.getElementById('note');
     note.classList.add('on');
-    if(!m||m.indexOf('@')<1){note.textContent='Enter a valid work email so we know where to send the invite.';return}
-    note.textContent='Thanks'+(n?', '+n.split(' ')[0]:'')+'. Your invite is on its way to '+m+'.';
+    if(!m||m.indexOf('@')<1){note.textContent='Enter a valid email so we know where to send your pass.';return}
+    note.textContent='Thanks'+(n?', '+n.split(' ')[0]:'')+'. Your pass is on its way to '+m+'.';
   });
 })();
 </script>
